@@ -31,8 +31,7 @@ jobs:
           distribution: temurin
           java-version: 17
 
-      - uses: android-actions/setup-android@v3
-
+      # the ubuntu runner image already contains the Android SDK ($ANDROID_HOME)
       - name: Install Capacitor
         run: npm install
 
