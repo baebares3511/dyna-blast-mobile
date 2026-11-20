@@ -391,9 +391,17 @@ export class GuestSession {
       src.consumeBomb();
       src.consumeDet();
     }
-    this.link.send({
-      t: 'i', x: p.x, y: p.y, dir: p.dir, moving: p.moving, press: src.dir, bomb: this.bombSeq, det: this.detSeq,
-    });
+    // through a relay server inputs go at the broker's rate (direct: every frame)
+    const now = performance.now();
+    const pressed = this.bombSeq !== this.sentBomb || this.detSeq !== this.sentDet;
+    if (pressed || now - (this.lastSend || 0) >= this.link.sendGap) {
+      this.lastSend = now;
+      this.sentBomb = this.bombSeq;
+      this.sentDet = this.detSeq;
+      this.link.send({
+        t: 'i', x: p.x, y: p.y, dir: p.dir, moving: p.moving, press: src.dir, bomb: this.bombSeq, det: this.detSeq,
+      });
+    }
     const k = Math.min(1, dt * 20);
     for (const q of g.players) {
       if (q.id === this.me || q.netX === undefined) continue;

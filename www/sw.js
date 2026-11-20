@@ -2,7 +2,7 @@
 // (iPhone "Add to Home Screen", Android "Install app"). Files are served from
 // the cache instantly and refreshed in the background, so a new version is
 // picked up on the next start. Online multiplayer still needs the Internet.
-const CACHE = 'dynablast-v1';
+const CACHE = 'dynablast-v2';
 const CORE = [
   './', './index.html', './css/style.css', './manifest.webmanifest',
   './icons/icon-192.png', './icons/icon-512.png', './icons/apple-touch-icon.png', './icons/favicon.png',
@@ -12,7 +12,7 @@ const CORE = [
   './js/game/explosion.js', './js/game/monsters.js', './js/game/boss.js', './js/game/campaign.js', './js/game/game.js',
   './js/ai/danger.js', './js/ai/bot.js',
   './js/input/input.js', './js/session/controllers.js', './js/session/session.js',
-  './js/net/peer.js', './js/net/snapshot.js',
+  './js/net/peer.js', './js/net/relay.js', './js/net/snapshot.js',
   './js/render/sprites.js', './js/render/particles.js', './js/render/extras.js', './js/render/renderer.js',
   './js/audio/audio.js', './js/audio/music.js',
   './js/ui/ui.js', './js/ui/hud.js',

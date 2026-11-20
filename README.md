@@ -134,6 +134,10 @@ Po zmianach w `www/` wystarczy `npm run android:sync` i ponowny build.
   śmierci, boty) i 30× na sekundę wysyła stan planszy do gości. Każdy gość przewiduje lokalnie tylko
   ruch własnej postaci (dzięki temu sterowanie jest natychmiastowe), host to weryfikuje.
   Wszyscy widzą ten sam stan planszy, bomb, płomieni i bonusów.
+* **Kanał zapasowy:** gdy bezpośrednie połączenie nie powstanie w ~7 s (typowe między iPhone'em
+  a Androidem — Safari ukrywa adresy w sieci lokalnej), gra sama łączy się przez publiczny serwer
+  MQTT (HiveMQ, awaryjnie EMQX). W lobby taki gracz ma dopisek **PRZEZ SERWER**. Działa w każdej
+  sieci, kosztem nieco większego opóźnienia (ruch własnej postaci nadal jest natychmiastowy).
 * Gdy gość wyjdzie lub straci połączenie, jego bombera przejmuje bot i gra toczy się dalej.
   Do trwającej gry nie można dołączyć (pokój przyjmuje graczy tylko w lobby).
 * Transport: WebRTC (biblioteka PeerJS). Publiczny serwer PeerJS służy wyłącznie do „przedstawienia”

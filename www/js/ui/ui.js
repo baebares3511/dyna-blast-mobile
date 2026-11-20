@@ -346,7 +346,7 @@ export class UI {
     const refresh = () => {
       const me = getCharacter(store.settings.character);
       const entries = [{ name: store.settings.name || 'GRACZ', character: me.id, host: true }, ...guests.values()];
-      list.innerHTML = entries.map((e) => `<div class="room-player"><img src="${bomberIconURL(getCharacter(e.character).style)}" alt=""><span>${e.name}</span>${e.host ? '<i>HOST</i>' : ''}</div>`).join('')
+      list.innerHTML = entries.map((e) => `<div class="room-player"><img src="${bomberIconURL(getCharacter(e.character).style)}" alt=""><span>${e.name}</span>${e.host ? '<i>HOST</i>' : e.cid && e.cid.startsWith('relay-') ? '<i class="via">PRZEZ SERWER</i>' : ''}</div>`).join('')
         + Array.from({ length: MAX_GUESTS - guests.size }, () => '<div class="room-player empty">wolne miejsce</div>').join('');
       startBtn.disabled = guests.size === 0;
       if (codeEl.textContent !== '····') {
@@ -413,7 +413,7 @@ export class UI {
       audio.play('click');
       input.blur();
       btn.disabled = true;
-      status.textContent = 'Łączenie z pokojem ' + code + '…';
+      status.textContent = 'Łączenie z pokojem ' + code + '… (do 20 s)';
       if (this.link) this.link.close();
       const link = new NetLink();
       this.link = link;
@@ -423,7 +423,9 @@ export class UI {
         if (this.link !== link) return;
         this.linkInUse = true;
         this.link = null;
-        status.textContent = 'Połączono! Czekam aż host rozpocznie grę…';
+        status.textContent = link.via === 'relay'
+          ? 'Połączono przez serwer zapasowy! Czekam aż host rozpocznie grę…'
+          : 'Połączono! Czekam aż host rozpocznie grę…';
         link.send({ t: 'hello', name: store.settings.name, character: store.settings.character });
         this.app.startGuest(link);
       } catch (err) {
