@@ -1,0 +1,22 @@
+{
+  "name": "dyna-blast-mobile",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Dyna Blast Mobile - arcade bomber game for Android (Capacitor)",
+  "scripts": {
+    "serve": "py scripts/devserver.py 8765",
+    "standalone": "py scripts/build-standalone.py",
+    "android:add": "npx cap add android && node scripts/patch-android.mjs",
+    "android:sync": "npx cap sync android",
+    "android:open": "npx cap open android",
+    "android:build": "npx cap sync android && cd android && ./gradlew assembleDebug"
+  },
+  "dependencies": {
+    "@capacitor/android": "^6.1.2",
+    "@capacitor/app": "^6.0.0",
+    "@capacitor/core": "^6.1.2"
+  },
+  "devDependencies": {
+    "@capacitor/cli": "^6.1.2"
+  }
+}

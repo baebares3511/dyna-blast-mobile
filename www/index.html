@@ -1,0 +1,183 @@
+<!doctype html>
+<html lang="pl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+  <meta name="theme-color" content="#0d0a1c">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <title>Dyna Blast Mobile</title>
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <canvas id="game"></canvas>
+
+  <div id="hud" class="hidden">
+    <div id="hud-left" class="hud-side"></div>
+    <div id="hud-right" class="hud-side"></div>
+    <div id="hud-top"><div id="hud-timer">2:00</div><button id="btn-pause" aria-label="Pauza">II</button></div>
+  </div>
+
+  <div id="controls" class="hidden"></div>
+
+  <div id="screens">
+    <section id="scr-menu" class="screen">
+      <div class="menu-layout">
+        <div class="logo">
+          <div class="logo-main">DYNA<br>BLAST</div>
+          <div class="logo-sub">— MOBILE —</div>
+          <div class="logo-bombs"><i></i><i></i><i></i></div>
+        </div>
+        <nav class="menu-buttons">
+          <button data-go="adventure" class="primary">PRZYGODA</button>
+          <button data-go="bots">GRA Z BOTAMI</button>
+          <button data-go="twop">MULTIPLAYER</button>
+          <button data-go="settings">USTAWIENIA</button>
+          <button data-go="stats">STATYSTYKI</button>
+        </nav>
+      </div>
+    </section>
+
+    <section id="scr-setup" class="screen">
+      <h2 class="title">GRA Z BOTAMI</h2>
+      <div class="setup-grid">
+        <div class="rows"></div>
+        <div class="preview">
+          <canvas id="map-preview" width="150" height="130"></canvas>
+          <div class="map-name"></div>
+        </div>
+      </div>
+      <div class="actions">
+        <button data-act="back">WSTECZ</button>
+        <button data-act="start" class="primary">START!</button>
+      </div>
+    </section>
+
+    <section id="scr-adv" class="screen">
+      <h2 class="title">PRZYGODA</h2>
+      <div class="setup-grid">
+        <div class="rows"></div>
+        <div class="rank">
+          <div class="rank-title">NAJLEPSZE WYNIKI</div>
+          <table class="rank-table"></table>
+        </div>
+      </div>
+      <div class="actions">
+        <button data-act="back">WSTECZ</button>
+        <button data-act="continue">KONTYNUUJ</button>
+        <button data-act="new" class="primary">NOWA PRZYGODA</button>
+      </div>
+    </section>
+
+    <section id="scr-twop" class="screen">
+      <h2 class="title">MULTIPLAYER</h2>
+      <div class="twop-grid">
+        <button data-go="local" class="card-btn"><b>JEDEN EKRAN</b><small>2 graczy na tym samym telefonie / tablecie (+ boty)</small></button>
+        <button data-go="host" class="card-btn"><b>UTWÓRZ POKÓJ</b><small>Do 4 graczy · Wi-Fi / Internet · dostaniesz kod pokoju</small></button>
+        <button data-go="join" class="card-btn"><b>DOŁĄCZ</b><small>Wpisz kod pokoju od znajomego</small></button>
+      </div>
+      <div class="actions"><button data-go="menu">WSTECZ</button></div>
+    </section>
+
+    <section id="scr-host" class="screen">
+      <h2 class="title">TWÓJ POKÓJ</h2>
+      <div class="setup-grid">
+        <div class="rows"></div>
+        <div class="room">
+          <div class="room-label">KOD POKOJU</div>
+          <div class="room-code">····</div>
+          <div class="room-players"></div>
+          <div class="status"></div>
+        </div>
+      </div>
+      <div class="actions">
+        <button data-act="back">WSTECZ</button>
+        <button data-act="start" class="primary" disabled>START!</button>
+      </div>
+    </section>
+
+    <section id="scr-join" class="screen">
+      <h2 class="title">DOŁĄCZ DO POKOJU</h2>
+      <div class="join-box">
+        <input class="code-input" maxlength="4" placeholder="ABCD" autocomplete="off" spellcheck="false" autocapitalize="characters">
+        <div class="status"></div>
+      </div>
+      <div class="actions">
+        <button data-act="back">WSTECZ</button>
+        <button data-act="join" class="primary">DOŁĄCZ</button>
+      </div>
+    </section>
+
+    <section id="scr-settings" class="screen">
+      <h2 class="title">USTAWIENIA</h2>
+      <div class="tabs"><button class="tab" data-tab="general">OGÓLNE</button><button class="tab" data-tab="touch">DOTYK</button><button class="tab" data-tab="keys">KLAWIATURA</button></div>
+      <div class="rows settings-rows"></div>
+      <div class="actions"><button data-go="menu">WSTECZ</button></div>
+    </section>
+
+    <section id="scr-stats" class="screen">
+      <h2 class="title">STATYSTYKI</h2>
+      <div class="stats-grid"></div>
+      <div class="actions">
+        <button id="btn-reset-stats">WYZERUJ</button>
+        <button data-go="menu" class="primary">WSTECZ</button>
+      </div>
+    </section>
+  </div>
+
+  <div id="ov-pause" class="overlay hidden">
+    <div class="panel">
+      <h2 class="title">PAUZA</h2>
+      <div class="col-buttons">
+        <button id="btn-resume" class="primary">WZNÓW</button>
+        <button id="btn-restart">RESTART RUNDY</button>
+        <button id="btn-pause-menu">MENU GŁÓWNE</button>
+      </div>
+      <p class="pause-hint"></p>
+    </div>
+  </div>
+
+  <div id="ov-results" class="overlay hidden">
+    <div class="panel results">
+      <div class="res-head">ZWYCIĘZCA</div>
+      <div class="res-winner"></div>
+      <div class="res-info"></div>
+      <table class="res-table"></table>
+      <div class="res-status"></div>
+      <div class="actions">
+        <button id="btn-rematch" class="primary">REWANŻ</button>
+        <button id="btn-newgame">NOWA GRA</button>
+        <button id="btn-res-menu">MENU GŁÓWNE</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="ov-story" class="overlay hidden">
+    <div class="panel story">
+      <div class="story-main">
+        <div class="story-art"><img alt=""></div>
+        <div class="story-body">
+          <div class="story-title"></div>
+          <p class="story-text"></p>
+        </div>
+      </div>
+      <div class="actions">
+        <button data-act="skip">POMIŃ</button>
+        <button data-act="next" class="primary">DALEJ ▶</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="ov-stage" class="overlay hidden"><div class="stage-box"><div class="stage-title"></div><div class="stage-sub"></div></div></div>
+
+  <div id="toast"></div>
+  <div id="fps" class="hidden"></div>
+  <div id="rotate"><div class="phone"></div><p>OBRÓĆ TELEFON POZIOMO</p></div>
+
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,9 @@
+{
+  "name": "Dyna Blast Mobile",
+  "short_name": "Dyna Blast",
+  "start_url": "./index.html",
+  "display": "fullscreen",
+  "orientation": "landscape",
+  "background_color": "#0d0a1c",
+  "theme_color": "#0d0a1c"
+}
