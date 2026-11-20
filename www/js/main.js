@@ -288,7 +288,38 @@ class App {
   }
 }
 
+// Web version: offline cache + "install" hints (iPhone has no APK - the game
+// is added to the home screen from Safari instead).
+function setupWebApp() {
+  if (isNative || !/^https?:$/.test(location.protocol)) return;
+  const local = /^(localhost|127\.0\.0\.1|\[::1\])$/.test(location.hostname);
+  if ('serviceWorker' in navigator && !local) navigator.serviceWorker.register('sw.js').catch(() => {});
+  const standalone = navigator.standalone || matchMedia('(display-mode: standalone), (display-mode: fullscreen)').matches;
+  if (standalone) return;
+  const hint = $('#install-hint');
+  const ios = /iPhone|iPad|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+  const show = (html, onClick) => {
+    hint.innerHTML = html;
+    hint.classList.remove('hidden');
+    hint.onclick = (e) => {
+      if (e.target.closest('.x')) { hint.classList.add('hidden'); return; }
+      if (onClick) onClick();
+    };
+  };
+  if (ios) {
+    show('<b>IPHONE / IPAD:</b> w Safari stuknij <b>Udostępnij</b>, potem <b>Do ekranu początkowego</b> — gra uruchomi się na pełnym ekranie, z ikoną, także bez internetu. <span class="x">ZAMKNIJ</span>');
+  }
+  window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault();
+    show('<b>ZAINSTALUJ GRĘ</b> na tym urządzeniu (pełny ekran, ikona, gra offline) <span class="x">ZAMKNIJ</span>', () => {
+      hint.classList.add('hidden');
+      e.prompt();
+    });
+  });
+}
+
 window.addEventListener('DOMContentLoaded', () => {
   sources.forEach((s) => s.clear());
   window.app = new App();
+  setupWebApp();
 });

@@ -10,11 +10,16 @@ zewnętrznych assetów ani materiałów z oryginalnej gry.
   — otwórz link na telefonie, uruchom pobrany plik i zezwól na instalację z tego źródła.
   Nowe wersje instalują się jako aktualizacja (dane i statystyki zostają).
   Wszystkie wersje: zakładka [Releases](https://github.com/baebares3511/dyna-blast-mobile/releases).
-* **W przeglądarce (Android, iPhone, komputer — bez instalacji):**
-  <https://baebares3511.github.io/dyna-blast-mobile/> — telefon obróć poziomo; w Chrome/Safari
-  można dodać stronę do ekranu głównego.
+* **iPhone / iPad** (plik APK działa tylko na Androidzie — na iOS gra instaluje się z Safari):
+  1. Otwórz w **Safari** <https://baebares3511.github.io/dyna-blast-mobile/>
+  2. Stuknij **Udostępnij** (kwadrat ze strzałką) → **Do ekranu początkowego** → **Dodaj**.
+  3. Uruchamiaj grę ikoną z ekranu głównego — działa na pełnym ekranie, poziomo, także bez
+     internetu (internet potrzebny tylko do gry online). Aktualizacje pobierają się same.
+  Wskazówka: dźwięk na iPhonie nie gra, gdy włączony jest przełącznik wyciszenia z boku telefonu.
+* **Komputer / dowolny telefon bez instalacji:** ten sam link w przeglądarce
+  (w Chrome na Androidzie i komputerze pojawi się też przycisk **ZAINSTALUJ GRĘ**).
 
-Gracze z APK i z przeglądarki mogą grać razem w jednym pokoju online.
+Gracze z APK, z iPhone'a i z przeglądarki mogą grać razem w jednym pokoju online.
 
 ## Tryby gry
 

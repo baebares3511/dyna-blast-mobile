@@ -6,6 +6,11 @@
   <meta name="theme-color" content="#0d0a1c">
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Dyna Blast">
+  <meta name="format-detection" content="telephone=no">
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+  <link rel="icon" type="image/png" href="icons/favicon.png">
   <title>Dyna Blast Mobile</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -345,6 +350,23 @@ button:disabled { opacity: 0.4; pointer-events: none; }
 .room-player i { margin-left: auto; color: var(--yellow); font-style: normal; font-size: calc(var(--fs) * 0.6); }
 .room-player.empty { color: var(--muted); font-size: calc(var(--fs) * 0.65); justify-content: center; opacity: 0.6; }
 #scr-host .room-code { margin: 1vh 0; }
+/* ---------------------------------------------------------------- web app (iPhone / install) */
+html, body { -webkit-touch-callout: none; -webkit-text-size-adjust: 100%; }
+/* keep controls and HUD clear of the notch / home indicator in landscape */
+#controls, #hud {
+  left: env(safe-area-inset-left); right: env(safe-area-inset-right);
+  bottom: env(safe-area-inset-bottom); top: env(safe-area-inset-top);
+}
+.install-hint {
+  position: absolute; left: 50%; bottom: max(8px, env(safe-area-inset-bottom)); transform: translateX(-50%);
+  width: min(92vw, 720px); background: rgba(18, 12, 38, 0.95); border: 2px solid var(--yellow);
+  border-radius: 4px; padding: 0.7em 0.9em; font-size: calc(var(--fs) * 0.68); line-height: 1.7;
+  color: var(--text); text-align: center; cursor: pointer;
+}
+.install-hint b { color: var(--yellow); font-weight: normal; }
+.install-hint .x { margin-left: 0.8em; color: var(--muted); text-decoration: underline; }
+#scr-menu { position: relative; }
+
 </style>
 </head>
 <body>
@@ -374,6 +396,7 @@ button:disabled { opacity: 0.4; pointer-events: none; }
           <button data-go="stats">STATYSTYKI</button>
         </nav>
       </div>
+      <div id="install-hint" class="install-hint hidden"></div>
     </section>
 
     <section id="scr-setup" class="screen">
@@ -923,9 +946,40 @@ class App {
   }
 }
 
+// Web version: offline cache + "install" hints (iPhone has no APK - the game
+// is added to the home screen from Safari instead).
+function setupWebApp() {
+  if (isNative || !/^https?:$/.test(location.protocol)) return;
+  const local = /^(localhost|127\.0\.0\.1|\[::1\])$/.test(location.hostname);
+  if ('serviceWorker' in navigator && !local) navigator.serviceWorker.register('sw.js').catch(() => {});
+  const standalone = navigator.standalone || matchMedia('(display-mode: standalone), (display-mode: fullscreen)').matches;
+  if (standalone) return;
+  const hint = $('#install-hint');
+  const ios = /iPhone|iPad|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+  const show = (html, onClick) => {
+    hint.innerHTML = html;
+    hint.classList.remove('hidden');
+    hint.onclick = (e) => {
+      if (e.target.closest('.x')) { hint.classList.add('hidden'); return; }
+      if (onClick) onClick();
+    };
+  };
+  if (ios) {
+    show('<b>IPHONE / IPAD:</b> w Safari stuknij <b>Udostępnij</b>, potem <b>Do ekranu początkowego</b> — gra uruchomi się na pełnym ekranie, z ikoną, także bez internetu. <span class="x">ZAMKNIJ</span>');
+  }
+  window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault();
+    show('<b>ZAINSTALUJ GRĘ</b> na tym urządzeniu (pełny ekran, ikona, gra offline) <span class="x">ZAMKNIJ</span>', () => {
+      hint.classList.add('hidden');
+      e.prompt();
+    });
+  });
+}
+
 window.addEventListener('DOMContentLoaded', () => {
   sources.forEach((s) => s.clear());
   window.app = new App();
+  setupWebApp();
 });
 
 return {  };
